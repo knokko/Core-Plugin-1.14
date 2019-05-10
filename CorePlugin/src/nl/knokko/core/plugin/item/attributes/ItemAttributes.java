@@ -107,7 +107,7 @@ public class ItemAttributes {
 	}
 	
 	private static AttributeModifier toBukkitAttributeModifier(Single attribute, int index) {
-		return new AttributeModifier(new UUID(index, index), attribute.attribute, attribute.value,
+		return new AttributeModifier(new UUID(index + 1, index + 1), attribute.attribute, attribute.value,
 				AttributeModifier.Operation.values()[attribute.operation], toBukkitSlot(attribute.slot));
 	}
 	
