@@ -107,7 +107,11 @@ public class ItemAttributes {
 	}
 	
 	private static AttributeModifier toBukkitAttributeModifier(Single attribute, int index) {
-		return new AttributeModifier(new UUID(index + 1, index + 1), attribute.attribute, attribute.value,
+		long most = index + 1 + attribute.slot.hashCode() * attribute.attribute.hashCode();
+		long least = index + 1 + attribute.slot.hashCode() + attribute.attribute.hashCode();
+		if (most == 0) most = -8;
+		if (least == 0) least = 12;
+		return new AttributeModifier(new UUID(most, least), attribute.attribute, attribute.value,
 				AttributeModifier.Operation.values()[attribute.operation], toBukkitSlot(attribute.slot));
 	}
 	
