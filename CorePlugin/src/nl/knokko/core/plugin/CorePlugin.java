@@ -37,6 +37,19 @@ public class CorePlugin extends JavaPlugin {
 		return instance;
 	}
 	
+	/**
+	 * The command usage of minecraft changed drastically when the updated from 1.12 to 1.13.
+	 * This method can be used to determine whether the current server version uses the old command
+	 * system (1.12 and earlier) or the new command system (1.13 and later).
+	 * 
+	 * Since a separate version of Knokko Core is needed for every minecraft version, the result of
+	 * this method is simply hardcoded in the Knokko Core version.
+	 * @return
+	 */
+	public static boolean useNewCommands() {
+		return true;
+	}
+	
 	private MenuEventHandler menuHandler;
 	
 	public MenuEventHandler getMenuHandler() {
