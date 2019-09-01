@@ -23,18 +23,18 @@
  *******************************************************************************/
 package nl.knokko.core.plugin.item;
 
-import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemHelper {
 	
 	public static String getStackName(ItemStack stack) {
-		net.minecraft.server.v1_14_R1.ItemStack nms = CraftItemStack.asNMSCopy(stack);
+		net.minecraft.server.v1_13_R2.ItemStack nms = CraftItemStack.asNMSCopy(stack);
 		return nms.getName().getString();
 	}
 	
 	public static String getTagAsString(ItemStack stack) {
-		net.minecraft.server.v1_14_R1.ItemStack nms = CraftItemStack.asNMSCopy(stack);
+		net.minecraft.server.v1_13_R2.ItemStack nms = CraftItemStack.asNMSCopy(stack);
 		if (nms.hasTag()) {
 			return nms.getTag().toString();
 		} else {
