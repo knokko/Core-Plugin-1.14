@@ -23,6 +23,8 @@
  *******************************************************************************/
 package nl.knokko.core.plugin.item;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,5 +42,17 @@ public class ItemHelper {
 		} else {
 			return "No NBT";
 		}
+	}
+	
+	public static String getMaterialName(Block block) {
+		return block.getType().name();
+	}
+	
+	public static String getMaterialName(ItemStack stack) {
+		return stack.getType().name();
+	}
+	
+	public static ItemStack createStack(String materialName, int amount) {
+		return new ItemStack(Material.getMaterial(materialName), amount);
 	}
 }

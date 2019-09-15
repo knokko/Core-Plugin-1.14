@@ -119,6 +119,10 @@ public class ItemAttributes {
 		meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier("dummy", 0, AttributeModifier.Operation.ADD_NUMBER));
 	}
 	
+	public static ItemStack createWithAttributes(String materialName, int amount, Single...attributes) {
+		return createWithAttributes(Material.valueOf(materialName), amount, attributes);
+	}
+	
 	public static ItemStack createWithAttributes(Material type, int amount, Single...attributes) {
 		ItemStack original = new ItemStack(type, amount);
 		ItemMeta meta = Bukkit.getItemFactory().getItemMeta(type);
