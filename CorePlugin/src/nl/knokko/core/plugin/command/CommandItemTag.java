@@ -23,6 +23,7 @@
  *******************************************************************************/
 package nl.knokko.core.plugin.command;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,8 +40,9 @@ public class CommandItemTag implements CommandExecutor {
 			Player player = (Player) sender;
 			ItemStack item = player.getInventory().getItemInMainHand();
 			if (item != null) {
-				sender.sendMessage(ItemHelper.getTagAsString(item));
-				sender.sendMessage("toString() returns " + item);
+				sender.sendMessage(ChatColor.DARK_GREEN + ItemHelper.getTagAsString(item));
+				sender.sendMessage(ChatColor.BLUE + "And toString() returns:");
+				sender.sendMessage(ChatColor.YELLOW + item.toString());
 			} else {
 				sender.sendMessage("Hold the item to examine in your main hand");
 			}
