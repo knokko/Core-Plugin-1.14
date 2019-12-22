@@ -1,21 +1,11 @@
 package nl.knokko.core.plugin.world;
 
-import java.util.List;
-
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-
-import net.minecraft.server.v1_13_R2.AxisAlignedBB;
-import net.minecraft.server.v1_13_R2.EntityItem;
-import net.minecraft.server.v1_13_R2.FluidCollisionOption;
-import net.minecraft.server.v1_13_R2.MovingObjectPosition;
-import net.minecraft.server.v1_13_R2.Vec3D;
-import net.minecraft.server.v1_13_R2.WorldServer;
-import net.minecraft.server.v1_13_R2.MovingObjectPosition.EnumMovingObjectType;
 
 public class Raytracer {
 
@@ -37,68 +27,38 @@ public class Raytracer {
 	 */
 	public static RaytraceResult raytrace(Location startLocation, Vector vector, Entity...entitiesToExclude) {
 		
-		// Important variables
-		World world = startLocation.getWorld();
-		Vec3D rayStart = new Vec3D(startLocation.getX(), startLocation.getY(), startLocation.getZ());
-		Vec3D velocityVec = new Vec3D(vector.getX(), vector.getY(), vector.getZ());
-		Vec3D rayEnd = new Vec3D(rayStart.x + velocityVec.x, rayStart.y + velocityVec.y, rayStart.z + velocityVec.z);
-		CraftWorld craftWorld = (CraftWorld) world;
-		WorldServer nmsWorld = craftWorld.getHandle();
+		// TODO Determine proper raysize
+		double raySize = 0.1;
 		
-		// Start with infinity to make sure that any other distance will be shorter
-		double nearestDistanceSq = Double.POSITIVE_INFINITY;
-		Vec3D intersectionPos = null;
-		
-		// The block raytrace
-		MovingObjectPosition rayResult = nmsWorld.rayTrace(rayStart, velocityVec, FluidCollisionOption.NEVER, true, false);
-		if (rayResult != null && rayResult.type == EnumMovingObjectType.BLOCK) {
-			double blockDistanceSq = rayResult.pos.distanceSquared(rayStart);
-			if (blockDistanceSq < vector.lengthSquared()) {
-				intersectionPos = rayResult.pos;
-				nearestDistanceSq = blockDistanceSq;
-			}
-		}
-		
-		// The entity raytrace
-		AxisAlignedBB movementBB = new AxisAlignedBB(rayStart.x, rayStart.y, rayStart.z, rayEnd.x, rayEnd.y, rayEnd.z);
-		List<net.minecraft.server.v1_13_R2.Entity> nmsEntityList = nmsWorld.getEntities(null, movementBB);
-		net.minecraft.server.v1_13_R2.Entity intersectedEntity = null;
-		
-		entityListLoop:
-		for (net.minecraft.server.v1_13_R2.Entity nmsEntity : nmsEntityList) {
-			
-			// It's currently convenient to ignore dropped items
-			if (nmsEntity instanceof EntityItem)
-				continue entityListLoop;
-			
-			// Since the entities in entitiesToExclude could be null, it's important to call equals() on craftEntity
-			CraftEntity craftEntity = nmsEntity.getBukkitEntity();
-			for (Entity exclude : entitiesToExclude)
-				if (craftEntity.equals(exclude))
-					continue entityListLoop;
-			
-			// Check if we intersect this entity and check if the distance to it is smaller than the nearest distance so far
-			MovingObjectPosition entityIntersection = nmsEntity.getBoundingBox().b(rayStart, rayEnd);
-			if (entityIntersection != null) {
-				double distanceSq = rayStart.distanceSquared(entityIntersection.pos);
-				if (distanceSq < nearestDistanceSq) {
-					nearestDistanceSq = distanceSq;
-					intersectedEntity = nmsEntity;
-					intersectionPos = entityIntersection.pos;
-				}
-			}
-		}
-		
-		// Determining the final result
-		if (nearestDistanceSq < Double.POSITIVE_INFINITY) {
-			Location hitLocation = new Location(world, intersectionPos.x, intersectionPos.y, intersectionPos.z);
-			if (intersectedEntity != null) {
-				return RaytraceResult.hitEntity(intersectedEntity.getBukkitEntity(), hitLocation);
-			} else {
-				return RaytraceResult.hitBlock(hitLocation);
-			}
-		} else {
+		// I'm glade my own class is called RaytraceResult, which prevents naming clashes
+		RayTraceResult bukkitResult = startLocation.getWorld().rayTrace(
+				startLocation, vector, vector.length(), FluidCollisionMode.NEVER, true, raySize, 
+				(Entity toCheck) -> {
+					
+					// Ignore dropped items (especially important for projectile covers)
+					if (toCheck instanceof Item) {
+						return false;
+					}
+					
+					// Also ignore all entities in entitiesToExclude
+					for (Entity exclude : entitiesToExclude) {
+						if (toCheck.equals(exclude)) {
+							return false;
+						}
+					}
+					
+					// Accept all other entities
+					return true;
+				});
+		if (bukkitResult == null) {
 			return null;
+		} else {
+			if (bukkitResult.getHitEntity() != null) {
+				return RaytraceResult.hitEntity(bukkitResult.getHitEntity(), 
+						bukkitResult.getHitPosition().toLocation(startLocation.getWorld()));
+			} else {
+				return RaytraceResult.hitBlock(bukkitResult.getHitPosition().toLocation(startLocation.getWorld()));
+			}
 		}
 	}
 }
