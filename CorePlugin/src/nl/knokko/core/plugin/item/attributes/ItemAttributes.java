@@ -115,8 +115,11 @@ public class ItemAttributes {
 				AttributeModifier.Operation.values()[attribute.operation], toBukkitSlot(attribute.slot));
 	}
 	
+	// The parameters are just magic numbers, hoping to avoid collisions
+	private static final UUID DUMMY_UUID = new UUID(39847328746L, -2742859264376L);
+	
 	private static void addDummyAttributeModifier(ItemMeta meta) {
-		meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier("dummy", 0, AttributeModifier.Operation.ADD_NUMBER));
+		meta.addAttributeModifier(Attribute.GENERIC_MAX_HEALTH, new AttributeModifier(DUMMY_UUID, "dummy", 0, AttributeModifier.Operation.ADD_NUMBER));
 	}
 	
 	public static ItemStack createWithAttributes(String materialName, int amount, Single...attributes) {
