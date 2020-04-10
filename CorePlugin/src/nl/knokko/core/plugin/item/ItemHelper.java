@@ -52,7 +52,10 @@ public class ItemHelper {
 		return stack.getType().name();
 	}
 	
-	public static ItemStack createStack(String materialName, int amount) {
-		return new ItemStack(Material.getMaterial(materialName), amount);
+	public static ItemStack createStack(String materialName, int amount) throws UnknownMaterialException {
+		Material material = Material.getMaterial(materialName);
+		if (material == null)
+			throw new UnknownMaterialException(materialName);
+		return new ItemStack(material, amount);
 	}
 }
