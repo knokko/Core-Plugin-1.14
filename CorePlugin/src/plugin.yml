@@ -1,7 +1,7 @@
 name: KnokkoCore
 main: nl.knokko.core.plugin.CorePlugin
-api-version: 1.14
-version: 1.14 8
+api-version: 1.16
+version: 1.16 1
 commands:
   knokkocore:
     description: Test and debug command for the Knokko Core Plugin
