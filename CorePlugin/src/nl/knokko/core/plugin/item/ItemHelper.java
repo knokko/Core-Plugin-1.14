@@ -52,6 +52,10 @@ public class ItemHelper {
 		return stack.getType().name();
 	}
 	
+	public static boolean isMaterialSolid(Block block) {
+		return block.getType().isSolid();
+	}
+	
 	public static ItemStack createStack(String materialName, int amount) throws UnknownMaterialException {
 		Material material = Material.getMaterial(materialName);
 		if (material == null)
