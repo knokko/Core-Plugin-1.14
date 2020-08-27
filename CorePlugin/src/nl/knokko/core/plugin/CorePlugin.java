@@ -27,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import nl.knokko.core.plugin.command.*;
+import nl.knokko.core.plugin.event.CorePluginEventHandler;
 import nl.knokko.core.plugin.menu.MenuEventHandler;
 
 public class CorePlugin extends JavaPlugin {
@@ -61,6 +62,13 @@ public class CorePlugin extends JavaPlugin {
 		instance = this;
 		menuHandler = new MenuEventHandler();
 		Bukkit.getPluginManager().registerEvents(menuHandler, this);
+		Bukkit.getPluginManager().registerEvents(new CorePluginEventHandler(), this);
 		getCommand("knokkocore").setExecutor(new CommandKnokkoCore());
+	}
+	
+	@Override
+	public void onDisable() {
+		CorePluginEventHandler.clearSmithingPredicates();
+		instance = null;
 	}
 }
