@@ -52,6 +52,10 @@ public class ItemHelper {
 		return stack.getType().name();
 	}
 	
+	public static void setMaterial(ItemStack stack, String newMaterialName) {
+		stack.setType(Material.getMaterial(newMaterialName));
+	}
+	
 	public static boolean isMaterialSolid(Block block) {
 		return block.getType().isSolid();
 	}
