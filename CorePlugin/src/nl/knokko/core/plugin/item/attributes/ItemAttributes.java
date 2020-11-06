@@ -24,6 +24,7 @@
 package nl.knokko.core.plugin.item.attributes;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -55,6 +56,39 @@ public class ItemAttributes {
 			this.slot = slot;
 			this.operation = operation;
 			this.value = value;
+		}
+		
+		public String getAttribute() {
+			return attribute;
+		}
+		
+		public String getSlot() {
+			return slot;
+		}
+		
+		public int getOperation() {
+			return operation;
+		}
+		
+		public double getValue() {
+			return value;
+		}
+		
+		@Override
+		public String toString() {
+			return "ItemAttributes.Single(" + attribute + "," + slot + "," 
+					+ operation + "," + value + ")";
+		}
+		
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof Single) {
+				Single single = (Single) other;
+				return single.attribute.equals(attribute) && single.slot.equals(slot)
+						&& single.operation == operation && single.value == value;
+			} else {
+				return false;
+			}
 		}
 	}
 	
@@ -102,7 +136,17 @@ public class ItemAttributes {
 		} else if (slot.equals(Slot.OFF_HAND)){
 			return EquipmentSlot.OFF_HAND;
 		} else {
-			return EquipmentSlot.valueOf(slot.toUpperCase());
+			return EquipmentSlot.valueOf(slot.toUpperCase(Locale.ROOT));
+		}
+	}
+	
+	private static String fromBukkitSlot(EquipmentSlot slot) {
+		if (slot == EquipmentSlot.HAND) {
+			return Slot.MAIN_HAND;
+		} else if (slot == EquipmentSlot.OFF_HAND) {
+			return Slot.OFF_HAND;
+		} else {
+			return slot.name().toLowerCase(Locale.ROOT);
 		}
 	}
 	
@@ -144,6 +188,27 @@ public class ItemAttributes {
 		}
 	}
 	
+	public static ItemStack replaceAttributes(ItemStack original, Single...attributes) {
+		ItemMeta meta = original.getItemMeta();
+		if (meta == null) {
+			meta = Bukkit.getItemFactory().getItemMeta(original.getType());
+		} else {
+			for (Attribute attribute : meta.getAttributeModifiers().keySet()) {
+				meta.removeAttributeModifier(attribute);
+			}
+		}
+		for (int index = 0; index < attributes.length; index++) {
+			Single attribute = attributes[index];
+			meta.addAttributeModifier(toBukkitAttribute(attribute.attribute), toBukkitAttributeModifier(attribute, index));
+		}
+		if (attributes.length == 0) {
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			addDummyAttributeModifier(meta);
+		}
+		original.setItemMeta(meta);
+		return original;
+	}
+	
 	public static ItemStack setAttributes(ItemStack original, Single...attributes) {
 		ItemMeta meta = original.getItemMeta();
 		if (meta == null) {
@@ -178,7 +243,6 @@ public class ItemAttributes {
 		original.setItemMeta(meta);
 		return original;
 	}
-
 	
 	public static double getAttribute(ItemStack stack, String attribute) {
 		ItemMeta meta = stack.getItemMeta();
@@ -196,6 +260,31 @@ public class ItemAttributes {
 			}
 		}
 		return Double.NaN;
+	}
+	
+	public static Single[] getAttributes(ItemStack stack) {
+		ItemMeta meta = stack.getItemMeta();
+		if (meta != null) {
+			Multimap<Attribute, AttributeModifier> attributeModifiers = meta.getAttributeModifiers();
+			if (attributeModifiers == null) {
+				return new Single[0];
+			}
+			
+			Single[] attributes = new Single[attributeModifiers.size()];
+			int index = 0;
+			for (Entry<Attribute, AttributeModifier> attributePair : attributeModifiers.entries()) {
+				String attribute = fromBukkitAttribute(attributePair.getKey());
+				String slot = fromBukkitSlot(attributePair.getValue().getSlot());
+				int operation = attributePair.getValue().getOperation().ordinal();
+				double value = attributePair.getValue().getAmount();
+				attributes[index] = new Single(attribute, slot, operation, value);
+				index++;
+			}
+			
+			return attributes;
+		} else {
+			return new Single[0];
+		}
 	}
 	
 	public static ItemStack clearAttributes(ItemStack original) {
