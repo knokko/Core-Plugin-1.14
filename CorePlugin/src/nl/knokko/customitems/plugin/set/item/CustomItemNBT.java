@@ -2,10 +2,10 @@ package nl.knokko.customitems.plugin.set.item;
 
 import java.util.function.Consumer;
 
-import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 
-import net.minecraft.server.v1_14_R1.ItemStack;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_16_R2.ItemStack;
+import net.minecraft.server.v1_16_R2.NBTTagCompound;
 
 public class CustomItemNBT {
 	
