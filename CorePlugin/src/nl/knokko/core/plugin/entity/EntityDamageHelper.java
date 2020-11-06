@@ -1,11 +1,11 @@
 package nl.knokko.core.plugin.entity;
 
-import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
-import net.minecraft.server.v1_16_R2.EntityDamageSourceIndirect;
-import net.minecraft.server.v1_16_R2.EntitySmallFireball;
+import net.minecraft.server.v1_16_R3.EntityDamageSourceIndirect;
+import net.minecraft.server.v1_16_R3.EntitySmallFireball;
 
 public class EntityDamageHelper {
 
