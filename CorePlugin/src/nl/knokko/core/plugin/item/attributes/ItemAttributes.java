@@ -59,8 +59,8 @@ public class ItemAttributes {
 			this.value = value;
 		}
 		
-		public String getAttribute() {
-			return attribute;
+		public boolean isDummy() {
+			return operation == 0 && value == 0;
 		}
 		
 		@Override
