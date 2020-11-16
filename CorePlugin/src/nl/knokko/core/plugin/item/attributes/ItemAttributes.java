@@ -26,6 +26,7 @@ package nl.knokko.core.plugin.item.attributes;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -62,18 +63,6 @@ public class ItemAttributes {
 			return attribute;
 		}
 		
-		public String getSlot() {
-			return slot;
-		}
-		
-		public int getOperation() {
-			return operation;
-		}
-		
-		public double getValue() {
-			return value;
-		}
-		
 		@Override
 		public String toString() {
 			return "ItemAttributes.Single(" + attribute + "," + slot + "," 
@@ -84,7 +73,7 @@ public class ItemAttributes {
 		public boolean equals(Object other) {
 			if (other instanceof Single) {
 				Single single = (Single) other;
-				return single.attribute.equals(attribute) && single.slot.equals(slot)
+				return single.attribute.equals(attribute) && Objects.equals(slot, single.slot)
 						&& single.operation == operation && single.value == value;
 			} else {
 				return false;
@@ -131,6 +120,9 @@ public class ItemAttributes {
 	}
 	
 	private static EquipmentSlot toBukkitSlot(String slot) {
+		if (slot == null) {
+			return null;
+		}
 		if (slot.equals(Slot.MAIN_HAND)) {
 			return EquipmentSlot.HAND;
 		} else if (slot.equals(Slot.OFF_HAND)){
@@ -141,6 +133,9 @@ public class ItemAttributes {
 	}
 	
 	private static String fromBukkitSlot(EquipmentSlot slot) {
+		if (slot == null) {
+			return null;
+		}
 		if (slot == EquipmentSlot.HAND) {
 			return Slot.MAIN_HAND;
 		} else if (slot == EquipmentSlot.OFF_HAND) {
@@ -150,9 +145,17 @@ public class ItemAttributes {
 		}
 	}
 	
+	private static int slotHashCode(String slot) {
+		if (slot == null) {
+			return 111;
+		} else {
+			return slot.hashCode();
+		}
+	}
+	
 	private static AttributeModifier toBukkitAttributeModifier(Single attribute, int index) {
-		long most = index + 1 + attribute.slot.hashCode() * attribute.attribute.hashCode();
-		long least = index + 1 + attribute.slot.hashCode() + attribute.attribute.hashCode();
+		long most = index + 1 + slotHashCode(attribute.slot) * attribute.attribute.hashCode();
+		long least = index + 1 + slotHashCode(attribute.slot) + attribute.attribute.hashCode();
 		if (most == 0) most = -8;
 		if (least == 0) least = 12;
 		return new AttributeModifier(new UUID(most, least), attribute.attribute, attribute.value,
