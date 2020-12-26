@@ -102,4 +102,9 @@ public class GeneralItemNBT {
 		checkWrite();
 		initCompoundTags(key).setInt(key[key.length - 1], value);
 	}
+	
+	public void remove(String[] key) {
+		checkWrite();
+		initCompoundTags(key).remove(key[key.length - 1]);
+	}
 }
