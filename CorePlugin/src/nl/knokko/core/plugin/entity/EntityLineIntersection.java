@@ -3,11 +3,11 @@ package nl.knokko.core.plugin.entity;
 import java.util.Optional;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_16_R3.Vec3D;
+import net.minecraft.server.v1_15_R1.Vec3D;
 
 public class EntityLineIntersection {
 
@@ -15,7 +15,7 @@ public class EntityLineIntersection {
 			Entity entity, Location lineStartLocation, 
 			Vector direction, double safeUpperBound
 	) {
-		net.minecraft.server.v1_16_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_15_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 		Vec3D lineStart = new Vec3D(
 				lineStartLocation.getX(), 
 				lineStartLocation.getY(), 
