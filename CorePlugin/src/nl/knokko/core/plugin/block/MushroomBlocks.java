@@ -9,7 +9,7 @@ import org.bukkit.block.data.MultipleFacing;
 public class MushroomBlocks {
 	
 	public static boolean areEnabled() {
-		// Custom mushroom blocks are enabled in mc 1.14
+		// Custom mushroom blocks are enabled in mc 1.13
 		return true;
 	}
 
