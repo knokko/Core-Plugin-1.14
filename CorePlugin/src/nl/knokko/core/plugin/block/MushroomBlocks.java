@@ -13,8 +13,8 @@ public class MushroomBlocks {
 		return true;
 	}
 
-	public static void place(Block destination, boolean[] directions, Type type) {
-		MultipleFacing mushroomData = (MultipleFacing) Bukkit.createBlockData(fromType(type));
+	public static void place(Block destination, boolean[] directions, String materialName) {
+		MultipleFacing mushroomData = (MultipleFacing) Bukkit.createBlockData(Material.valueOf(materialName));
 		mushroomData.setFace(BlockFace.DOWN, directions[0]);
 		mushroomData.setFace(BlockFace.EAST, directions[1]);
 		mushroomData.setFace(BlockFace.NORTH, directions[2]);
@@ -35,17 +35,5 @@ public class MushroomBlocks {
 				mushroomData.hasFace(BlockFace.WEST),
 		};
 		return result;
-	}
-	
-	private static Material fromType(Type type) {
-		if (type == Type.STEM) return Material.MUSHROOM_STEM;
-		if (type == Type.BROWN) return Material.BROWN_MUSHROOM_BLOCK;
-		return Material.RED_MUSHROOM_BLOCK;
-	}
-	
-	public enum Type {
-		STEM,
-		RED,
-		BROWN
 	}
 }
