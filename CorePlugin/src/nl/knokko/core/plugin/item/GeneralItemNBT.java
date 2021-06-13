@@ -1,9 +1,9 @@
 package nl.knokko.core.plugin.item;
 
-import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class GeneralItemNBT {
 
@@ -15,11 +15,11 @@ public class GeneralItemNBT {
 		return new GeneralItemNBT(CraftItemStack.asNMSCopy(bukkitStack), true);
 	}
 
-	private final net.minecraft.server.v1_14_R1.ItemStack nmsStack;
+	private final net.minecraft.world.item.ItemStack nmsStack;
 	private NBTTagCompound tag;
 	private final boolean canWrite;
 
-	private GeneralItemNBT(net.minecraft.server.v1_14_R1.ItemStack nmsStack, boolean canWrite) {
+	private GeneralItemNBT(net.minecraft.world.item.ItemStack nmsStack, boolean canWrite) {
 		this.nmsStack = nmsStack;
 		this.tag = nmsStack != null ? nmsStack.getTag() : null;
 		this.canWrite = canWrite;
